@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moscow Cup</title>
+    <style>
+        /* Базовые стили (неизменяемые) */
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            color: #333;
+            background: #f0f0f0;
+        }
+
+        header {
+            background: #fff;
+            padding: 20px;
+            text-align: right;
+            box-sizing: border-box;
+        }
+
+        nav {
+            display: flex;
+            flex-direction: column; /* Изменено на столбец для мобильных устройств */
+            background: #f0f0f0;
+            box-sizing: border-box;
+            padding: 10px;
+        }
+
+        nav > section {
+            margin-bottom: 10px; /* Изменено на 10px для мобильных устройств */
+        }
+
+        main {
+            display: flex;
+            flex-direction: column; /* Изменено на столбец для мобильных устройств */
+            align-items: stretch;
+            flex-grow: 1;
+            padding: 20px;
+            text-align: center;
+        }
+
+        section {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            flex-grow: 1;
+        }
+
+        footer {
+            background: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .news-item img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .user-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: right;
+        }
+
+        .user-menu li {
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .user-menu a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        #smart-search-form {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #search-input {
+            width: 100%; /* Изменено на 100% для мобильных устройств */
+            padding: 8px;
+            margin: 10px;
+            box-sizing: border-box;
+        }
+
+        #search-button {
+            padding: 8px 16px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #messenger-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        #messenger-modal {
+            display: none;
+            position: fixed;
+            bottom: 80px;
+            right: 40px;
+            width: 100%; /* Изменено на 100% для мобильных устройств */
+            height: 100%; /* Изменено на 100% для мобильных устройств */
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        #close-messenger {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
+
+        .chat-list {
+            overflow-y: auto;
+            max-height: 300px;
+            margin-bottom: 20px;
+        }
+
+        .chat-list-item {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            cursor: pointer;
+        }
+
+        .chat-list-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        #tinder-container,
+        .news-item {
+            flex-grow: 1;
+            margin-right: 0; /* Изменено на 0 для мобильных устройств */
+        }
+
+        #tinder-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        #tinder-image {
+            width: 100%;
+            max-width: 200px;
+            border-radius: 8px;
+        }
+
+        #tinder-description {
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        #tinder-buttons {
+            display: flex;
+            flex-direction: column; /* Изменено на столбец для мобильных устройств */
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        #swipe-button,
+        #like-button {
+            padding: 10px;
+            margin: 0 0 10px 0; /* Изменено на 0 0 10px 0 для мобильных устройств */
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        #swipe-button:hover {
+            background-color: #2382c2;
+        }
+
+        #like-button {
+            background-color: #3498db;
+            color: #fff;
+        }
+
+        #like-button:hover {
+            background-color: #2980b9;
+        }
+
+        /* Стили для мобильных устройств с использованием медиа-запросов */
+        @media only screen and (max-width: 600px) {
+            #search-input {
+                width: 100%;
+            }
+
+            #tinder-buttons {
+                flex-direction: row;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Шапка сайта -->
+    <header>
+        <ul class="user-menu">
+            <li><a href="#">Профиль компании</a></li>
+            <li><a href="#">Личный кабинет</a></li>
+        </ul>
+    </header>
+
+    <!-- Навигационное меню -->
+    <nav>
+        <!-- Новостная лента -->
+        <section class="news-item">
+            <h2>Новости</h2>
+            <img src="https://yt3.ggpht.com/a/AATXAJyiXkXv_Y5UtYr4pTDEeq0xS7olxj_gs3WY9Q=s900-c-k-c0xffffffff-no-rj-mo" alt="News Image 1">
+            <p>крупнейшая в истории России финансовая пирамида, организованная Сергеем Мавроди.</p>
+
+            <img src="https://38news.ru/wp-content/uploads/2023/09/rossijskij-makdonalds.-vkusno-i-tochka-shokirovala-rossiyan-neozhidannym-novovvedeniem-2.jpg" alt="News Image 2">
+            <p>Российская адаптация Макдональдса.</p>
+
+            <!-- Добавлена форма для добавления новости -->
+            <form id="add-news-form">
+                <label for="news-image">Изображение:</label>
+                <input type="file" id="news-image" accept="image/*">
+                <label for="news-description">Описание новости:</label>
+                <textarea id="news-description" rows="4"></textarea>
+                <button type="button" id="add-news-button">Добавить новость</button>
+            </form>
+        </section>
+
+        <!-- Тиндер -->
+        <section id="tinder-container">
+            <img id="tinder-image" src="https://yougame.biz/data/avatars/o/453/453306.jpg?1639039544" alt="Swipe Image">
+            <div id="tinder-description">
+                <p>Семен Семенович</p>
+                <p>Основатель techan и крупнейшего маркетплейса в мире.</p>
+                <p>г. Москва, Генеральный директор ООО Наебалово</p>
+            </div>
+            <div id="tinder-buttons">
+                <button id="swipe-button">Свайпнуть</button>
+                <button id="like-button">Лайкнуть</button>
+            </div>
+        </section>
+    </nav>
+
+    <!-- Основное содержимое сайта -->
+    <main>
+        <!-- Умный поиск -->
+        <section id="smart-search-form">
+            <form action="#" method="post">
+                <input type="text" id="search-input" placeholder="Введите запрос...">
+                <button type="submit" id="search-button">Искать</button>
+            </form>
+        </section>
+    </main>
+
+    <!-- Иконка мессенджера -->
+    <button id="messenger-icon">&#9993;</button>
+
+    <!-- Модальное окно мессенджера -->
+    <div id="messenger-modal">
+        <button id="close-messenger">&times;</button>
+        <h2>Мессенджер</h2>
+        <!-- Список чатов -->
+        <div class="chat-list">
+            <div class="chat-list-item">Чат 1</div>
+            <div class="chat-list-item">Чат 2</div>
+            <div class="chat-list-item">Чат 3</div>
+            <!-- Добавьте дополнительные чаты по аналогии -->
+        </div>
+        <!-- Здесь может быть содержание мессенджера, например, сообщения и список друзей -->
+    </div>
+
+    <!-- Подвал сайта -->
+    <footer>
+        <p>&copy; 2023 Moscow Cup</p>
+    </footer>
+
+    <script>
+        // Добавление новости в новостную ленту
+        document.getElementById('add-news-button').addEventListener('click', function () {
+            const newsImage = document.getElementById('news-image').value;
+            const newsDescription = document.getElementById('news-description').value;
+
+            if (newsImage && newsDescription) {
+                const newsSection = document.querySelector('.news-item');
+                const newNews = document.createElement('section');
+                newNews.innerHTML = `<img src="${newsImage}" alt="News Image">
+                                    <p>${newsDescription}</p>`;
+                newsSection.appendChild(newNews);
+            }
+
+            // Очистка полей формы
+            document.getElementById('news-image').value = '';
+            document.getElementById('news-description').value = '';
+        });
+
+        // Открытие и закрытие модального окна мессенджера
+        const messengerIcon = document.getElementById('messenger-icon');
+        const messengerModal = document.getElementById('messenger-modal');
+        const closeMessenger = document.getElementById('close-messenger');
+
+        messengerIcon.addEventListener('click', function () {
+            messengerModal.style.display = 'block';
+        });
+
+        closeMessenger.addEventListener('click', function () {
+            messengerModal.style.display = 'none';
+        });
+
+        // Анимация для кнопки свайпа
+        const swipeButton = document.getElementById('swipe-button');
+        swipeButton.addEventListener('mouseover', function () {
+            this.style.backgroundColor = '#45a049';
+        });
+
+        swipeButton.addEventListener('mouseout', function () {
+            this.style.backgroundColor = '#4CAF50';
+        });
+
+        // Обработка события лайка (просто для примера, добавьте свою логику)
+        const likeButton = document.getElementById('like-button');
+        likeButton.addEventListener('click', function () {
+            // Добавьте вашу логику для обработки лайка
+            alert('Лайкнуто!');
+        });
+    </script>
+</body>
+</html>
